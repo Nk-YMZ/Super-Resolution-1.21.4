@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.15)
 project(SuperResolutionNativeMain)
 message(STATUS "生成FSR模块")
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 if (NOT (ON_LINUX OR ON_WINDOWS) )
     message(FATAL_ERROR "${LIB_PLATFORM} 平台不支持FSR")
 endif()
@@ -25,6 +29,7 @@ link_directories(
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/../SRNativeMain/include
+    ${PROJECT_SOURCE_DIR}/third_party
     ${PROJECT_SOURCE_DIR}/src
 )
 aux_source_directory(${PROJECT_SOURCE_DIR}/src ALL_SRC)
