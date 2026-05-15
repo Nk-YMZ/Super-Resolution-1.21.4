@@ -22,5 +22,5 @@ import net.irisshaders.iris.pipeline.CompositeRenderer;
 
 @FunctionalInterface
 public interface PassEventHandler {
-    void handle(CompositeRenderer renderer, NamedCompositePass pass, IrisCompositePassType passType);
+    void handle(ICompositeRendererAccessor renderer, NamedCompositePass pass, IrisCompositePassType passType);
 }
