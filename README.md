@@ -77,7 +77,7 @@ cd native/cpp && python init.py && cd ../..
 
 最后，感谢 AI 参与了本分支的开发：
 
-* **[Z.ai GLM-5.2](https://z.ai)**（即本仓库的 AI 协作者）— 承担了主要工作量：原生库打包链路设计、`NativeLibManager` 接口改造、`build.gradle.kts` 构建脚本修改、DLSS 子模块从 v310.6.0 升级至 v310.7.0 的决策与签名 bug 分析、构建验证、Release 发布等全流程
+* **[OpenCode](https://opencode.ai)** + **[Z.ai GLM-5.2](https://z.ai)** — 本仓库的主力 AI 协作组合。OpenCode 作为 AI 编程工具提供了完整的项目上下文管理与多轮交互能力，GLM-5.2 作为底层模型承担了主要工作量：原生库打包链路设计、`NativeLibManager` 接口改造、`build.gradle.kts` 构建脚本修改、DLSS 子模块从 v310.6.0 升级至 v310.7.0 的决策与签名 bug 分析、构建验证、Release 发布等全流程
 * **[Moonshot Kimi K2.7 Code](https://www.moonshot.cn)** — 在项目前期参与了源码解读与可行性验证工作
 
 没有这些 AI 工具的协助，从子模块签名 bug 排查到原生库打包这一系列工程问题，对个人开发者而言将会困难得多。AI 不是取代创造，而是让一个人也能做到原本需要一个团队才能做的事。
