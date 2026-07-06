@@ -4,6 +4,7 @@ import multiversion.VersionConfig
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.jvm.tasks.Jar
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 
 plugins {
     `java-library`
@@ -13,6 +14,10 @@ plugins {
 val versionConfig = rootProject.extra["versionConfig"] as VersionConfig
 val getCurrentNeoFormVersion: () -> String = { "1.21.4-20241203.161809" }
 val imguiVersion = if (versionConfig.common.minecraftVersion >= "26.1") "1.92.0" else "1.90.0"
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(versionConfig.common.javaVersion))
+}
 
 apply(plugin = "net.neoforged.moddev")
 extensions.configure<Any>("neoForge") {
