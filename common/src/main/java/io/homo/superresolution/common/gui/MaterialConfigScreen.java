@@ -1037,7 +1037,7 @@ public class MaterialConfigScreen extends NanoVGScreen<MaterialConfigScreen> {
                         Text.translatable("superresolution.screen.config.options.label.enable_experimental_features"),
                         SuperResolutionConfig.isEnableExperimentalFeatures())
                 .setDescription(Text.translatable("superresolution.screen.config.options.tooltip.enable_experimental_features"))
-                .setDefaultValue(() -> false)
+                .setDefaultValue(() -> true)
                 .setSaveConsumer(SuperResolutionConfig::setEnableExperimentalFeatures)
                 .build();
 

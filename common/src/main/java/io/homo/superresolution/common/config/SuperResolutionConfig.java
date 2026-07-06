@@ -214,7 +214,7 @@ public class SuperResolutionConfig {
         );
         ENABLE_EXPERIMENTAL_FEATURES = builder.defineBoolean(
                 "experiment/enable_experimental_features",
-                () -> false,
+                () -> true,
                 "Enable experimental features"
         );
 

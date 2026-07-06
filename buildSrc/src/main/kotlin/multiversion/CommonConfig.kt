@@ -15,30 +15,16 @@ class CommonConfig(config: Map<*, *>) {
     val clothConfigVersion: String? = config["cloth_config_version"]?.toString()
     val modArtifactMinecraftVer: String = config["mod_artifact_minecraft_ver"]?.toString().orEmpty()
 
-    var forgeVersionRange: String? = null
-    var neoforgeVersionRange: String? = null
     var fabricVersionRange: List<String> = emptyList()
 
     val enableFabric: Boolean = platforms.contains("fabric")
-    val enableForge: Boolean = platforms.contains("forge")
-    val enableNeoForge: Boolean = platforms.contains("neoforge")
 
     init {
-        val forge = config["forge"] as? Map<*, *>
-        if (forge != null && enableForge) {
-            forgeVersionRange = forge["minecraft_version_range"]?.toString()
-        }
-
         val fabric = config["fabric"] as? Map<*, *>
         if (fabric != null && enableFabric) {
             fabricVersionRange = (fabric["minecraft_version_range"] as? List<*>)
                 ?.mapNotNull { it?.toString() }
                 ?: emptyList()
-        }
-
-        val neoforge = config["neoforge"] as? Map<*, *>
-        if (neoforge != null && enableNeoForge) {
-            neoforgeVersionRange = neoforge["minecraft_version_range"]?.toString()
         }
     }
 }
