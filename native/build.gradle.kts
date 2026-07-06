@@ -42,6 +42,14 @@ tasks.register<Copy>("copyNativeLibAll") {
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
     into("$projectDir/../common/src/main/resources/lib/")
+
+    // NVIDIA NGX DLSS 运行时 snippet（来自 DLSS submodule lib/Linux_x86_64/rel）
+    // 由 DLSS.java 设置的 NGX_FEATURE_DLL_PATH 在 NATIVE_LIBRARIES_DIR 中按文件名查找
+    from("$projectDir/cpp/SRNativeDLSS/third_party/DLSS/lib/Linux_x86_64/rel") {
+        include("libnvidia-ngx-dlss.so.310.7.0")
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
+    into("$projectDir/../common/src/main/resources/lib/")
 }
 
 tasks.register<Exec>("buildNativeCppLinux") {

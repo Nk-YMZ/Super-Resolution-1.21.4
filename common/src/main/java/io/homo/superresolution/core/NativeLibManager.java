@@ -41,16 +41,23 @@ public class NativeLibManager {
     #else
     public static final boolean USE_DEBUG_LIB = false;
     #endif
+    public static final String NGX_DLSS_RUNTIME_FILENAME = "libnvidia-ngx-dlss.so.310.7.0";
+
     private static final List<NativeLib> libs = new ArrayList<>();
     public static NativeLib LIB_SUPER_RESOLUTION = null;
     public static NativeLib LIB_SUPER_RESOLUTION_DLSS = null;
+    public static NativeLib LIB_NVIDIA_NGX_DLSS = null;
     private static boolean nativeApiAvailable;
 
     static {
         LIB_SUPER_RESOLUTION = new NativeLib("SuperResolution", true, true);
         LIB_SUPER_RESOLUTION_DLSS = new NativeLib("SuperResolutionDLSS", false, false);
+        // NVIDIA NGX DLSS 运行时 snippet：由 DLSS.java 经 NGX_FEATURE_DLL_PATH 让 NGX 在
+        // NATIVE_LIBRARIES_DIR 中按文件名查找并 dlopen，不在 JVM 层 System.load。
+        LIB_NVIDIA_NGX_DLSS = new NativeLib(NGX_DLSS_RUNTIME_FILENAME, false, false, true);
         libs.add(LIB_SUPER_RESOLUTION);
         libs.add(LIB_SUPER_RESOLUTION_DLSS);
+        libs.add(LIB_NVIDIA_NGX_DLSS);
     }
 
     public static boolean nativeApiAvailable() {
@@ -232,11 +239,12 @@ public class NativeLibManager {
                 } else {
                     sb.append("+release");
                 }
+                sb.append(".so");
             } else {
+                // nameIsPath=true：baseName 视为完整文件名直接使用，不再追加扩展
                 sb.append(baseName);
             }
 
-            sb.append(".so");
             return sb.toString();
         }
 
