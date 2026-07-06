@@ -158,7 +158,7 @@ public class SuperResolutionConfig {
         THEME = builder.defineEnum(
                 "theme",
                 MaterialTheme.class,
-                () -> MaterialTheme.Light,
+                () -> MaterialTheme.Dark,
                 "Interface theme"
         );
 
@@ -191,8 +191,8 @@ public class SuperResolutionConfig {
 
         SKIP_INIT_VULKAN = builder.defineBoolean(
                 "debug/skip_init_vulkan",
-                () -> !(CURRENT_OS_TYPE == OperatingSystemType.ANDROID || CURRENT_OS_TYPE == OperatingSystemType.MACOS),
-                "Skip Vulkan initialization (auto-set based on OS)"
+                () -> false,
+                "Skip Vulkan initialization"
         );
 
         ENABLE_RENDER_DOC = builder.defineBoolean(
