@@ -489,7 +489,6 @@ public class MaterialConfigScreen extends NanoVGScreen<MaterialConfigScreen> {
 
     private boolean isExperimentalAlgorithm(AlgorithmDescription<?> algorithmDescription){
         return algorithmDescription.equals(AlgorithmDescriptions.DLSS) ||
-                algorithmDescription.equals(AlgorithmDescriptions.XESS) ||
                 algorithmDescription.equals(AlgorithmDescriptions.ANIME4K);
     }
 
@@ -882,20 +881,6 @@ public class MaterialConfigScreen extends NanoVGScreen<MaterialConfigScreen> {
                 }
         );
         #endif
-
-        if (Platform.currentPlatform.getOS().type.equals(OperatingSystemType.WINDOWS)) {
-            dialog.addAction(
-                    Text.translatable("superresolution.screen.config.dialog.local_resource.action.download_dlss_windows").getString(),
-                    MaterialButtonVariant.Outlined,
-                    d -> openExternalLink("https://raw.githubusercontent.com/NVIDIA/DLSS/refs/heads/main/lib/Windows_x86_64/rel/nvngx_dlss.dll")
-            );
-
-            dialog.addAction(
-                    Text.translatable("superresolution.screen.config.dialog.local_resource.action.download_xess_windows").getString(),
-                    MaterialButtonVariant.Outlined,
-                    d -> openExternalLink("https://raw.githubusercontent.com/intel/xess/refs/heads/main/bin/libxess.dll")
-            );
-        }
 
         dialog.addAction(
                 Text.translatable("superresolution.screen.config.dialog.local_resource.action.done").getString(),
@@ -1525,7 +1510,6 @@ public class MaterialConfigScreen extends NanoVGScreen<MaterialConfigScreen> {
                 new LibraryInfo("RenderDoc", "https://github.com/baldurk/renderdoc"),
                 new LibraryInfo("Lightweight Java Game Library 3(LWJGL3)", "https://github.com/LWJGL/lwjgl3"),
                 new LibraryInfo("Glslang", "https://github.com/KhronosGroup/glslang"),
-                new LibraryInfo("Intel XeSS SDK", "https://github.com/intel/xess"),
                 new LibraryInfo("NVIDIA RTX DLSS SDK", "https://github.com/NVIDIA/DLSS"),
                 new LibraryInfo("JCPP", "https://github.com/shevek/jcpp")
 

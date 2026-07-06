@@ -38,7 +38,6 @@ import io.homo.superresolution.common.upscale.fsr2.FSR2;
 import io.homo.superresolution.common.upscale.none.None;
 import io.homo.superresolution.common.upscale.sgsr.v1.Sgsr1;
 import io.homo.superresolution.common.upscale.sgsr.v2.Sgsr2;
-import io.homo.superresolution.common.upscale.xess.XeSS;
 import io.homo.superresolution.core.graphics.opengl.Gl;
 import net.minecraft.network.chat.Component;
 
@@ -66,36 +65,6 @@ public class AlgorithmDescriptions {
                     .setName(Component.translatable("superresolution.algo.preset.fsr.ultra_performance"))
                     .setCodeName("fsr_ultra_performance")
                     .setUpscaleRatio(3.0f)
-    );
-    private static final List<QualityPreset> XESS_QUALITY_PRESETS = List.of(
-            new QualityPreset()
-                    .setName(Component.translatable("superresolution.algo.preset.xess.ultra_performance"))
-                    .setCodeName("xess_ultra_performance")
-                    .setUpscaleRatio(3.0f),
-            new QualityPreset()
-                    .setName(Component.translatable("superresolution.algo.preset.xess.performance"))
-                    .setCodeName("xess_performance")
-                    .setUpscaleRatio(2.3f),
-            new QualityPreset()
-                    .setName(Component.translatable("superresolution.algo.preset.xess.balanced"))
-                    .setCodeName("xess_balanced")
-                    .setUpscaleRatio(2.0f),
-            new QualityPreset()
-                    .setName(Component.translatable("superresolution.algo.preset.xess.quality"))
-                    .setCodeName("xess_quality")
-                    .setUpscaleRatio(1.7f),
-            new QualityPreset()
-                    .setName(Component.translatable("superresolution.algo.preset.xess.ultra_quality"))
-                    .setCodeName("xess_ultra_quality")
-                    .setUpscaleRatio(1.5f),
-            new QualityPreset()
-                    .setName(Component.translatable("superresolution.algo.preset.xess.ultra_quality_plus"))
-                    .setCodeName("xess_ultra_quality_plus")
-                    .setUpscaleRatio(1.3f),
-            new QualityPreset()
-                    .setName(Component.translatable("superresolution.algo.preset.xess.native_aa"))
-                    .setCodeName("xess_native_aa")
-                    .setUpscaleRatio(1.0f)
     );
     private static final List<QualityPreset> DLSS_QUALITY_PRESETS = List.of(
             new QualityPreset()
@@ -180,35 +149,6 @@ public class AlgorithmDescriptions {
             .customUpscaleRatio(true)
             .build();
 
-    public static final AlgorithmDescription<XeSS> XESS = AlgorithmDescription.builder(XeSS.class)
-            .briefName("Intel XeSS")
-            .codeName("xess")
-            .displayName("Intel Xe Super Sampling")
-            .requirement(
-                    Requirement.nothing()
-                            .addSupportedOS(new OperatingSystem(SystemArchitecture.X86_64, OperatingSystemType.WINDOWS))
-                            .requiredGlExtension("GL_EXT_memory_object")
-                            .requiredGlExtension("GL_EXT_semaphore")
-                            .glMajorVersion(4)
-                            .glMinorVersion(6)
-                            .requireVulkan(true)
-            )
-            .extraResources(
-                    ExtraResources.builder()
-                            .add(ExtraResource.builder("libxess.dll")
-                                    .addRemote(
-                                            "https://cnb.cool/187J3X1-114514/mc-superresolution/-/releases/download/assets/libxess.dll",
-                                            "CNB Mirror"
-                                    )
-                                    .build()
-                            )
-                            .build()
-            )
-            .supportJitter(true)
-            .qualityPresets(XESS_QUALITY_PRESETS)
-            .customUpscaleRatio(false)
-            .build();
-
     public static final AlgorithmDescription<DLSS> DLSS = AlgorithmDescription.builder(DLSS.class)
             .briefName("NVIDIA DLSS")
             .codeName("dlss")
@@ -285,7 +225,6 @@ public class AlgorithmDescriptions {
         AlgorithmRegistry.registry(FSR1);
         AlgorithmRegistry.registry(FSR2);
         AlgorithmRegistry.registry(FSR);
-        AlgorithmRegistry.registry(XESS);
         AlgorithmRegistry.registry(DLSS);
         AlgorithmRegistry.registry(SGSR1);
         AlgorithmRegistry.registry(SGSR2);

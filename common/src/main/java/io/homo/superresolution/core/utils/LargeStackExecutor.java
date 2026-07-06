@@ -29,7 +29,7 @@ package io.homo.superresolution.core.utils;
  * survive, which is why the crash looked JVM-vendor specific.
  * <p>
  * Running the initializer on a thread created with an explicit large stack size removes the
- * dependency on {@code -Xss} so DLSS/FSR/XeSS init works on any JVM out of the box.
+ * dependency on {@code -Xss} so DLSS/FSR init works on any JVM out of the box.
  */
 public final class LargeStackExecutor {
     /** 16 MB — matches the {@code -Xss16m} value verified to fix the NGX init overflow. */

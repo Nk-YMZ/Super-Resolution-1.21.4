@@ -470,10 +470,8 @@ public class WidgetDesignScreen extends NanoVGScreen<WidgetDesignScreen> {
 
         MaterialButton dlssBtn = MaterialButton.tonal("DLSS");
         MaterialButton fsrBtn = MaterialButton.outlined("FSR");
-        MaterialButton xessBtn = MaterialButton.outlined("XeSS");
         algoRow.addChild(dlssBtn);
         algoRow.addChild(fsrBtn);
-        algoRow.addChild(xessBtn);
         container.addChild(algoRow);
 
         MaterialLabel qualityLabel = MaterialLabel.create()
@@ -619,7 +617,6 @@ public class WidgetDesignScreen extends NanoVGScreen<WidgetDesignScreen> {
 
         container.addChild(createInfoRow("DLSS", "✓ 支持"));
         container.addChild(createInfoRow("FSR", "✓ 支持"));
-        container.addChild(createInfoRow("XeSS", "✓ 支持"));
 
         frame.setRoot(container);
         return frame;
@@ -778,7 +775,6 @@ public class WidgetDesignScreen extends NanoVGScreen<WidgetDesignScreen> {
                 .width(300)
                 .addOption("dlss", "DLSS")
                 .addOption("fsr", "FSR 2.0")
-                .addOption("xess", "XeSS")
                 .addOption("native", "原生渲染")
                 .setValue("dlss")
                 .onSelectionChanged(value -> {

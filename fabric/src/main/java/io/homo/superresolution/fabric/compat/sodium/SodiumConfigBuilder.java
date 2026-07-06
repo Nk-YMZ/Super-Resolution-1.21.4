@@ -18,7 +18,7 @@
 
 package io.homo.superresolution.fabric.compat.sodium;
 
-#if MC_VER > MC_1_21_10 || 1
+#if MC_VER > MC_1_21_10
 
 import io.homo.superresolution.common.gui.ConfigScreenBuilder;
 import io.homo.superresolution.common.minecraft.MinecraftUtils;

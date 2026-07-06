@@ -32,18 +32,13 @@ import org.lwjgl.vulkan.KHRExternalSemaphoreFd;
 import org.lwjgl.vulkan.VK;
 
 import static org.lwjgl.vulkan.EXTDebugUtils.VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
-import static org.lwjgl.vulkan.EXTMutableDescriptorType.VK_EXT_MUTABLE_DESCRIPTOR_TYPE_EXTENSION_NAME;
 import static org.lwjgl.vulkan.KHRDedicatedAllocation.VK_KHR_DEDICATED_ALLOCATION_EXTENSION_NAME;
 import static org.lwjgl.vulkan.KHRExternalMemory.VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME;
 import static org.lwjgl.vulkan.KHRExternalMemoryCapabilities.VK_KHR_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME;
-import static org.lwjgl.vulkan.KHRExternalMemoryWin32.VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME;
 import static org.lwjgl.vulkan.KHRExternalSemaphore.VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME;
 import static org.lwjgl.vulkan.KHRExternalSemaphoreCapabilities.VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME;
-import static org.lwjgl.vulkan.KHRExternalSemaphoreWin32.VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME;
 import static org.lwjgl.vulkan.KHRGetMemoryRequirements2.VK_KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME;
 import static org.lwjgl.vulkan.KHRPushDescriptor.VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME;
-import static org.lwjgl.vulkan.KHRShaderFloat16Int8.VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME;
-import static org.lwjgl.vulkan.KHRShaderIntegerDotProduct.VK_KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME;
 import static org.lwjgl.vulkan.KHRDynamicRendering.VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME;
 
 public class RenderSystems {
@@ -127,9 +122,6 @@ public class RenderSystems {
                 .addInstanceExtension(VK_KHR_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME)
                 .addInstanceExtension(VK_EXT_DEBUG_UTILS_EXTENSION_NAME)
                 .addDeviceExtension(VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME)
-                .addDeviceExtension(VK_EXT_MUTABLE_DESCRIPTOR_TYPE_EXTENSION_NAME)//XeSS
-                .addDeviceExtension(VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME)//XeSS
-                .addDeviceExtension(VK_KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME)//XeSS
                 .addDeviceExtension(VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME)
                 .addDeviceExtension(VK_KHR_DEDICATED_ALLOCATION_EXTENSION_NAME)
                 .addDeviceExtension(VK_KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME)
@@ -138,10 +130,6 @@ public class RenderSystems {
                 .addDeviceExtension("VK_NVX_image_view_handle")
                 .addDeviceExtension(VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME)
                 .addDeviceExtension(VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME);
-        if (Platform.currentPlatform.getOS().type == OperatingSystemType.WINDOWS) {
-            vulkan.addDeviceExtension(VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME)
-                    .addDeviceExtension(VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME);
-        }
         if (Platform.currentPlatform.getOS().type == OperatingSystemType.LINUX) {
             vulkan.addDeviceExtension(KHRExternalMemoryFd.VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME)
                     .addDeviceExtension(KHRExternalSemaphoreFd.VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME);

@@ -1,5 +1,5 @@
-import multiversion.BasePlatformConfig
 import multiversion.Dependency
+import multiversion.FabricPlatformConfig
 import multiversion.VersionConfig
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.compile.JavaCompile
@@ -11,43 +11,19 @@ plugins {
 
 @Suppress("UNCHECKED_CAST")
 val versionConfig = rootProject.extra["versionConfig"] as VersionConfig
-@Suppress("UNCHECKED_CAST")
-val getCurrentNeoFormVersion = rootProject.extra["getCurrentNeoFormVersion"] as () -> String
+val getCurrentNeoFormVersion: () -> String = { "1.21.4-20241203.161809" }
 val imguiVersion = if (versionConfig.common.minecraftVersion >= "26.1") "1.92.0" else "1.90.0"
 
-val isNewVersion = versionConfig.common.minecraftVersion > "1.20.1"
-if (isNewVersion) {
-    apply(plugin = "net.neoforged.moddev")
-} else {
-    apply(plugin = "net.neoforged.moddev.legacyforge")
-}
-
-
-if (isNewVersion) {
-    extensions.configure<Any>("neoForge") {
-        withGroovyBuilder {
-            setProperty("neoFormVersion", versionConfig.common.neoFormVersion ?: getCurrentNeoFormVersion())
-            val parchmentVersion = versionConfig.common.parchmentVersion
-            if (parchmentVersion != null) {
-                "parchment" {
-                    val parts = parchmentVersion.split(":")
-                    setProperty("minecraftVersion", parts[0])
-                    setProperty("mappingsVersion", parts[1])
-                }
-            }
-        }
-    }
-} else {
-    extensions.configure<Any>("legacyForge") {
-        withGroovyBuilder {
-            setProperty("mcpVersion", versionConfig.common.minecraftVersion)
-            val parchmentVersion = versionConfig.common.parchmentVersion
-            if (parchmentVersion != null) {
-                "parchment" {
-                    val parts = parchmentVersion.split(":")
-                    setProperty("minecraftVersion", parts[0])
-                    setProperty("mappingsVersion", parts[1])
-                }
+apply(plugin = "net.neoforged.moddev")
+extensions.configure<Any>("neoForge") {
+    withGroovyBuilder {
+        setProperty("neoFormVersion", versionConfig.common.neoFormVersion ?: getCurrentNeoFormVersion())
+        val parchmentVersion = versionConfig.common.parchmentVersion
+        if (parchmentVersion != null) {
+            "parchment" {
+                val parts = parchmentVersion.split(":")
+                setProperty("minecraftVersion", parts[0])
+                setProperty("mappingsVersion", parts[1])
             }
         }
     }
@@ -73,7 +49,7 @@ repositories {
     }
 }
 
-fun findIris(config: BasePlatformConfig?): Pair<Dependency, Boolean>? {
+fun findIris(config: FabricPlatformConfig?): Pair<Dependency, Boolean>? {
     if (config == null) return null
 
     config.dependencies?.modrinth?.forEach { dep ->
@@ -119,38 +95,15 @@ dependencies {
         compileOnly("org.ow2.asm:asm-tree:9.6")
     }
 
-    var irisDependency: Pair<Dependency, Boolean>? = null
-    var irisPlatform: String? = null
-
-    if (versionConfig.common.enableNeoForge && irisDependency == null) {
-        irisDependency = findIris(versionConfig.neoforge)
-        irisPlatform = "neoforge"
-    }
-
-    if (versionConfig.common.enableForge && irisDependency == null) {
-        irisDependency = findIris(versionConfig.forge)
-        irisPlatform = "forge"
-    }
-
-    if (versionConfig.common.enableFabric && irisDependency == null) {
-        irisDependency = findIris(versionConfig.fabric)
-        irisPlatform = "fabric"
-    }
-
+    val irisDependency = findIris(versionConfig.fabric)
     if (irisDependency != null) {
         val dep = irisDependency.first
         if (irisDependency.second) {
             compileOnly(mapOf("name" to dep.name, "ext" to "jar"))
         } else {
-            if (irisPlatform == "neoforge") {
-                compileOnly(
-                    "maven.modrinth:${dep.name}:${dep.version}-neo,${dep.minecraftVersion ?: versionConfig.common.minecraftVersion}"
-                )
-            } else {
-                modCompileOnlyCompat(
-                    "maven.modrinth:${dep.name}:${dep.version}-${irisPlatform},${dep.minecraftVersion ?: versionConfig.common.minecraftVersion}"
-                )
-            }
+            modCompileOnlyCompat(
+                "maven.modrinth:${dep.name}:${dep.version}-fabric,${dep.minecraftVersion ?: versionConfig.common.minecraftVersion}"
+            )
         }
     }
 }

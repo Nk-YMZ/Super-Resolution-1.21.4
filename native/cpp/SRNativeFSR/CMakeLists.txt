@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 3.15)
 project(SuperResolutionNativeMain)
 message(STATUS "生成FSR模块")
 
-if (NOT (ON_LINUX OR ON_WINDOWS))
-    message(FATAL_ERROR "${LIB_PLATFORM} 平台不支持FSR")
-endif()
-
 find_package(Vulkan REQUIRED)
 
 # ============================================================
@@ -122,25 +118,7 @@ endif()
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 平台定义——使用 target_compile_definitions 而不是 add_definitions，
-# 只对 SRNativeFSR 生效，不会泄漏到 SDK 子目录
-set(_SR_FSR_PLATFORM_DEFS "")
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    list(APPEND _SR_FSR_PLATFORM_DEFS ON_LINUX64 FFX_GCC)
-elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    list(APPEND _SR_FSR_PLATFORM_DEFS ON_WIN64 _DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-elseif(CMAKE_SYSTEM_NAME MATCHES "Android")
-    list(APPEND _SR_FSR_PLATFORM_DEFS ON_ANDROID)
-elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-    list(APPEND _SR_FSR_PLATFORM_DEFS ON_MACOS)
-else()
-    message(FATAL_ERROR "不支持的平台: ${CMAKE_SYSTEM_NAME}")
-endif()
-
-if(MSVC)
-    add_compile_options(/utf-8 /ZI)
-endif()
+set(_SR_FSR_PLATFORM_DEFS ON_LINUX64 FFX_GCC)
 
 link_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../SRNativeMain/libraries/${LIB_PLATFORM}
@@ -164,11 +142,7 @@ target_compile_definitions(SR_FSR_LIB PRIVATE
     SRLIB_VERSION="${SRLIB_VERSION}"
 )
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    set_target_properties(SR_FSR_LIB PROPERTIES OUTPUT_NAME "SuperResolutionFSR+${LIB_PLATFORM}+${SR_BUILD_TYPE}")
-elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    set_target_properties(SR_FSR_LIB PROPERTIES OUTPUT_NAME "libSuperResolutionFSR+${LIB_PLATFORM}+${SR_BUILD_TYPE}")
-endif()
+set_target_properties(SR_FSR_LIB PROPERTIES OUTPUT_NAME "SuperResolutionFSR+${LIB_PLATFORM}+${SR_BUILD_TYPE}")
 
 target_link_libraries(SR_FSR_LIB
     SR_MAIN_LIB

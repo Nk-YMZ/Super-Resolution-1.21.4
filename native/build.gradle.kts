@@ -18,13 +18,13 @@ tasks.named("clean") {
 
 tasks.register<Copy>("copyNativeLib") {
     from("$projectDir/cpp/output/lib") {
-        include("libSuperResolution+*+*.so", "libSuperResolution+*+*.dll", "libSuperResolution+*+*.dylib")
+        include("libSuperResolution+*+*.so")
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
     into("$projectDir/../common/src/main/resources/lib/")
 
     from("$projectDir/cpp/output/bin") {
-        include("libSuperResolution+*+*.so", "libSuperResolution+*+*.dll", "libSuperResolution+*+*.dylib")
+        include("libSuperResolution+*+*.so")
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
     into("$projectDir/../common/src/main/resources/lib/")
@@ -32,49 +32,29 @@ tasks.register<Copy>("copyNativeLib") {
 
 tasks.register<Copy>("copyNativeLibAll") {
     from("$projectDir/cpp/output/lib") {
-        include("libSuperResolution*+*+*.so", "libSuperResolution*+*+*.dll", "libSuperResolution*+*+*.dylib")
+        include("libSuperResolution*+*+*.so")
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
     into("$projectDir/../common/src/main/resources/lib/")
 
     from("$projectDir/cpp/output/bin") {
-        include("libSuperResolution*+*+*.so", "libSuperResolution*+*+*.dll", "libSuperResolution*+*+*.dylib")
+        include("libSuperResolution*+*+*.so")
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
     into("$projectDir/../common/src/main/resources/lib/")
 }
 
-val osName = System.getProperty("os.name").lowercase()
-
-tasks.register<Exec>("buildNativeCppWindows") {
-    group = "build"
-    description = "Build native C/C++ DLLs via platform script"
-    workingDir = file("$projectDir/cpp")
-    if (osName.contains("windows")) {
-        commandLine("powershell", "-ExecutionPolicy", "Bypass", "-File", "build_windows.ps1")
-    } else if (osName.contains("linux")) {
-        commandLine("bash", "build_windows_docker.sh")
-    } else {
-        throw GradleException("Unsupported OS for native build: $osName")
-    }
-}
-
 tasks.register<Exec>("buildNativeCppLinux") {
     group = "build"
-    description = "Build native C/C++ .so Libraries via platform script"
+    description = "Build native C/C++ .so Libraries for Linux"
     workingDir = file("$projectDir/cpp")
     commandLine("bash", "build_linux.sh")
 }
 
 tasks.register("buildNativeCpp") {
     group = "build"
-    description = "Build native C/C++ libraries via platform script"
-    if (osName.contains("windows")) {
-        dependsOn("buildNativeCppWindows")
-    }
-    if (osName.contains("linux")) {
-        dependsOn("buildNativeCppLinux")
-    }
+    description = "Build native C/C++ libraries for Linux"
+    dependsOn("buildNativeCppLinux")
 }
 
 tasks.named("copyNativeLibAll") {

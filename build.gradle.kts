@@ -23,9 +23,8 @@ import java.io.IOException
 import java.io.InputStreamReader
 
 plugins {
-    id("net.neoforged.moddev") version "2.0.141" apply false
     id("multiversion")
-    id("multiversion-neoform")
+    id("net.neoforged.moddev") version "2.0.141" apply false
 }
 
 allprojects {
@@ -46,13 +45,11 @@ allprojects {
 
     repositories {
         mavenCentral()
-        maven(url = "https://maven.neoforged.net/releases")
         maven(url = "https://maven.aliyun.com/repository/central")
         maven(url = "https://maven.aliyun.com/repository/gradle-plugin")
         maven(url = "https://maven.architectury.dev/")
         maven(url = "https://maven.nucleoid.xyz/")
         maven(url = "https://maven.shedaniel.me/")
-        maven(url = "https://maven.neoforged.net/releases")
         maven(url = "https://libraries.minecraft.net")
         maven(url = "https://maven.fabricmc.net/")
         maven(url = "https://maven.parchmentmc.org/")

@@ -18,14 +18,8 @@
 
 package io.homo.superresolution.core.graphics.vulkan;
 
-import com.sun.jna.Pointer;
-import io.homo.superresolution.api.platform.OperatingSystemType;
-import io.homo.superresolution.api.platform.Platform;
-import org.lwjgl.PointerBuffer;
 import org.lwjgl.opengl.EXTMemoryObjectFD;
-import org.lwjgl.opengl.EXTMemoryObjectWin32;
 import org.lwjgl.opengl.EXTSemaphoreFD;
-import org.lwjgl.opengl.EXTSemaphoreWin32;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.Struct;
 import org.lwjgl.vulkan.*;
@@ -34,15 +28,7 @@ import static io.homo.superresolution.core.graphics.vulkan.VulkanUtils.VK_CHECK;
 import static org.lwjgl.vulkan.VK11.*;
 
 public class VulkanInterop {
-    public static final VulkanInteropExt IMPL;
-
-    static {
-        if (Platform.currentPlatform.getOS().type == OperatingSystemType.WINDOWS) {
-            IMPL = new WindowsVulkanInteropExtImpl();
-        } else {
-            IMPL = new LinuxVulkanInteropExtImpl();
-        }
-    }
+    public static final VulkanInteropExt IMPL = new LinuxVulkanInteropExtImpl();
 
     public interface VulkanInteropExt {
         void glImportSemaphoreHandleEXT(
@@ -137,79 +123,6 @@ public class VulkanInterop {
                     size,
                     EXTMemoryObjectFD.GL_HANDLE_TYPE_OPAQUE_FD_EXT,
                     (int) handle
-            );
-        }
-    }
-
-    private static class WindowsVulkanInteropExtImpl implements VulkanInteropExt {
-        @Override
-        public void glImportSemaphoreHandleEXT(MemoryStack stack, int semaphore, long handle) {
-            EXTSemaphoreWin32.glImportSemaphoreWin32HandleEXT(semaphore, EXTSemaphoreWin32.GL_HANDLE_TYPE_OPAQUE_WIN32_EXT, handle);
-        }
-
-        @Override
-        public long vkGetSemaphoreHandleKHR(MemoryStack stack, VkDevice device, Struct pGetHandleInfo) {
-            PointerBuffer fd = stack.callocPointer(1);
-            VK_CHECK(KHRExternalSemaphoreWin32.vkGetSemaphoreWin32HandleKHR(
-                    device,
-                    (VkSemaphoreGetWin32HandleInfoKHR) pGetHandleInfo,
-                    fd
-            ), "Failed to export Windows memory handle");
-            return fd.get(0);
-        }
-
-        @Override
-        public Struct createVkSemaphoreGetHandleInfoKHR(MemoryStack stack, long pVkSemaphore) {
-            VkSemaphoreGetWin32HandleInfoKHR semaphoreGetInfo = VkSemaphoreGetWin32HandleInfoKHR.calloc(stack);
-            semaphoreGetInfo.sType(KHRExternalSemaphoreWin32.VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR);
-            semaphoreGetInfo.handleType(VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT);
-            semaphoreGetInfo.semaphore(pVkSemaphore);
-            return semaphoreGetInfo;
-        }
-
-        @Override
-        public Struct createVkExportSemaphoreCreateInfo(MemoryStack stack) {
-            VkExportSemaphoreCreateInfo exportSemaphoreCreateInfo = VkExportSemaphoreCreateInfo.calloc(stack);
-            exportSemaphoreCreateInfo.sType(VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO);
-            exportSemaphoreCreateInfo.handleTypes(VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT);
-            return exportSemaphoreCreateInfo;
-        }
-
-        @Override
-        public Struct createVkExportMemoryAllocateInfo(MemoryStack stack) {
-            return VkExportMemoryAllocateInfo.calloc(stack)
-                    .sType(VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO)
-                    .handleTypes(VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT);
-        }
-
-        @Override
-        public Struct createVkImportMemoryInfo(MemoryStack stack, long handle) {
-            return VkImportMemoryWin32HandleInfoKHR.calloc(stack)
-                    .sType(KHRExternalMemoryWin32.VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR)
-                    .handleType(VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT)
-                    .handle(handle);
-        }
-
-        @Override
-        public long vkGetMemoryHandle(MemoryStack stack, VkDevice device, long memory) {
-            VkMemoryGetWin32HandleInfoKHR getInfo = VkMemoryGetWin32HandleInfoKHR.calloc(stack)
-                    .sType(KHRExternalMemoryWin32.VK_STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR)
-                    .memory(memory)
-                    .handleType(VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT);
-
-            PointerBuffer pHandle = stack.mallocPointer(1);
-            VK_CHECK(KHRExternalMemoryWin32.vkGetMemoryWin32HandleKHR(device, getInfo, pHandle),
-                    "Failed to export Windows memory handle");
-            return pHandle.get(0);
-        }
-
-        @Override
-        public void glImportMemoryEXT(int memoryObject, long size, long handle) {
-            EXTMemoryObjectWin32.glImportMemoryWin32HandleEXT(
-                    memoryObject,
-                    size,
-                    EXTMemoryObjectWin32.GL_HANDLE_TYPE_OPAQUE_WIN32_EXT,
-                    handle
             );
         }
     }

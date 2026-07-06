@@ -620,11 +620,7 @@ public class SuperResolutionConfig {
         if (SRWorkModeManager.isCurrentMode(SRWorkModeManager.SHADER_COMPAT)) {
             return 1.0f;
         }
-        if (
-                getUpscaleAlgorithm().equals(AlgorithmDescriptions.DLSS) ||
-                        getUpscaleAlgorithm().equals(AlgorithmDescriptions.XESS)
-
-        ) {
+        if (getUpscaleAlgorithm().equals(AlgorithmDescriptions.DLSS)) {
             return 1.0f;
         }
         return 0.5f;
