@@ -43,16 +43,13 @@ public class NativeLibManager {
     #endif
     private static final List<NativeLib> libs = new ArrayList<>();
     public static NativeLib LIB_SUPER_RESOLUTION = null;
-    public static NativeLib LIB_SUPER_RESOLUTION_FSR = null;
     public static NativeLib LIB_SUPER_RESOLUTION_DLSS = null;
     private static boolean nativeApiAvailable;
 
     static {
         LIB_SUPER_RESOLUTION = new NativeLib("SuperResolution", true, true);
-        LIB_SUPER_RESOLUTION_FSR = new NativeLib("SuperResolutionFSR", false, false);
         LIB_SUPER_RESOLUTION_DLSS = new NativeLib("SuperResolutionDLSS", false, false);
         libs.add(LIB_SUPER_RESOLUTION);
-        libs.add(LIB_SUPER_RESOLUTION_FSR);
         libs.add(LIB_SUPER_RESOLUTION_DLSS);
     }
 

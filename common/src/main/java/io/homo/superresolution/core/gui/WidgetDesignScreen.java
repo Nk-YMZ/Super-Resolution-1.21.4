@@ -469,9 +469,7 @@ public class WidgetDesignScreen extends NanoVGScreen<WidgetDesignScreen> {
         algoRow.layout().setGap(YogaGutter.ALL, 10);
 
         MaterialButton dlssBtn = MaterialButton.tonal("DLSS");
-        MaterialButton fsrBtn = MaterialButton.outlined("FSR");
         algoRow.addChild(dlssBtn);
-        algoRow.addChild(fsrBtn);
         container.addChild(algoRow);
 
         MaterialLabel qualityLabel = MaterialLabel.create()
@@ -616,7 +614,6 @@ public class WidgetDesignScreen extends NanoVGScreen<WidgetDesignScreen> {
         container.addChild(srTitle);
 
         container.addChild(createInfoRow("DLSS", "✓ 支持"));
-        container.addChild(createInfoRow("FSR", "✓ 支持"));
 
         frame.setRoot(container);
         return frame;
@@ -774,7 +771,6 @@ public class WidgetDesignScreen extends NanoVGScreen<WidgetDesignScreen> {
                 .supportingText("选择一个超分辨率算法")
                 .width(300)
                 .addOption("dlss", "DLSS")
-                .addOption("fsr", "FSR 2.0")
                 .addOption("native", "原生渲染")
                 .setValue("dlss")
                 .onSelectionChanged(value -> {

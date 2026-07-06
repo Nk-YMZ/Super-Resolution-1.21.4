@@ -488,8 +488,7 @@ public class MaterialConfigScreen extends NanoVGScreen<MaterialConfigScreen> {
     }
 
     private boolean isExperimentalAlgorithm(AlgorithmDescription<?> algorithmDescription){
-        return algorithmDescription.equals(AlgorithmDescriptions.DLSS) ||
-                algorithmDescription.equals(AlgorithmDescriptions.ANIME4K);
+        return algorithmDescription.equals(AlgorithmDescriptions.DLSS);
     }
 
     private Frame createGeneralFrame() {
@@ -547,7 +546,7 @@ public class MaterialConfigScreen extends NanoVGScreen<MaterialConfigScreen> {
                         SuperResolutionConfig.getUpscaleAlgorithm(),
                         AlgorithmRegistry.getAlgorithmMap().values().toArray())
                 .setNameProvider(algo -> ((AlgorithmDescription<?>) algo).getBriefName())
-                .setDefaultValue(() -> AlgorithmDescriptions.FSR1)
+                .setDefaultValue(() -> AlgorithmDescriptions.DLSS)
                 .setSaveConsumer((obj) -> {
                     AlgorithmDescription<?> algo = (AlgorithmDescription<?>) obj;
                     List<ExtraResource> lostResources = algo.getExtraResources().checkAll(SuperResolutionConstants.NATIVE_LIBRARIES_DIR);
@@ -1501,11 +1500,6 @@ public class MaterialConfigScreen extends NanoVGScreen<MaterialConfigScreen> {
                 new LibraryInfo("NanoSVG", "https://github.com/memononen/nanosvg"),
                 new LibraryInfo("Manifold", "https://github.com/manifold-systems/manifold"),
                 new LibraryInfo("Dear ImGui", "https://github.com/ocornut/imgui"),
-                new LibraryInfo("Snapdragon™ Game Super Resolution 2(1)", "https://github.com/SnapdragonStudios/snapdragon-gsr"),
-                new LibraryInfo("FidelityFX Super Resolution 1.0", "https://github.com/GPUOpen-Effects/FidelityFX-FSR"),
-                new LibraryInfo("FidelityFX Super Resolution 2.2", "https://github.com/GPUOpen-Effects/FidelityFX-FSR2"),
-                new LibraryInfo("AMD FidelityFX™ SDK", "https://github.com/GPUOpen-LibrariesAndSDKs/FidelityFX-SDK"),
-                new LibraryInfo("FidelityFX Super Resolution 2.2 (OpenGL)", "https://github.com/JuanDiegoMontoya/FidelityFX-FSR2-OpenGL"),
                 new LibraryInfo("Java OpenGL Math Library(JOML)", "https://github.com/JOML-CI/JOML"),
                 new LibraryInfo("RenderDoc", "https://github.com/baldurk/renderdoc"),
                 new LibraryInfo("Lightweight Java Game Library 3(LWJGL3)", "https://github.com/LWJGL/lwjgl3"),

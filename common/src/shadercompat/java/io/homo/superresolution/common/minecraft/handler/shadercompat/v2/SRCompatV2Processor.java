@@ -77,8 +77,7 @@ public class SRCompatV2Processor implements SRCompatProcessor {
     @Override
     public boolean needsPreProcessMotionVectors(SRShaderCompatData config, AbstractAlgorithm algorithm, AlgorithmDescription<?> description) {
         if (
-                description.equals(AlgorithmDescriptions.FSR) ||
-                        description.equals(AlgorithmDescriptions.DLSS)
+                description.equals(AlgorithmDescriptions.DLSS)
         ) {
             return false;
         }else {
@@ -112,8 +111,7 @@ public class SRCompatV2Processor implements SRCompatProcessor {
     @Override
     public Vector2f adaptJitterForShaderpack(Vector2f rawJitter, AbstractAlgorithm algorithm, SRShaderCompatData config, AlgorithmDescription<?> description) {
         if (
-                description.equals(AlgorithmDescriptions.FSR) ||
-                        description.equals(AlgorithmDescriptions.DLSS)
+                description.equals(AlgorithmDescriptions.DLSS)
         ) {
             return rawJitter.mul(1, -1);
         }else {

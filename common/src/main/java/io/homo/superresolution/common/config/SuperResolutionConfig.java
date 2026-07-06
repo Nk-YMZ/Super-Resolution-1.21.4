@@ -308,7 +308,7 @@ public class SuperResolutionConfig {
         try {
             GL.getCapabilities();
         } catch (Exception e) {
-            return AlgorithmDescriptions.FSR1;
+            return AlgorithmDescriptions.NONE;
         }
         for (AlgorithmDescription<?> algorithmDescription : AlgorithmRegistry.getAlgorithmMap().values()) {
             if (algorithmDescription.requirement.check().support()) {
@@ -617,20 +617,7 @@ public class SuperResolutionConfig {
     }
 
     public static float getMinUpscaleRatio() {
-        if (SRWorkModeManager.isCurrentMode(SRWorkModeManager.SHADER_COMPAT)) {
-            return 1.0f;
-        }
-        if (getUpscaleAlgorithm().equals(AlgorithmDescriptions.DLSS)) {
-            return 1.0f;
-        }
-        return 0.5f;
-        /*
-        int maxSize = 16384;
-        if (Minecraft.getInstance().getWindow() == null) return 0.1f;
-        double maxWidth = 1 / ((double) maxSize / Minecraft.getInstance().getWindow().getScreenWidth());
-        double maxHeight = 1 / ((double) maxSize / Minecraft.getInstance().getWindow().getScreenHeight());
-        return (float) Math.max(maxWidth, maxHeight);
-        */
+        return 1.0f;
     }
 
     public static Color getThemeColor() {

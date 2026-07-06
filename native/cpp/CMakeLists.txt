@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 project(SuperResolution)
 
-option(SR_FSR "启用以支持FSR" ON)
 option(SR_DLSS "启用以支持DLSS" ON)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -50,9 +49,6 @@ include_directories(
 )
 
 add_subdirectory("SRNativeMain")
-if(SR_FSR)
-    add_subdirectory("SRNativeFSR")
-endif()
 if(SR_DLSS)
     add_subdirectory("SRNativeDLSS")
 endif()

@@ -28,7 +28,6 @@ import io.homo.superresolution.common.minecraft.handler.RenderHandlerManager;
 import io.homo.superresolution.common.perf.PerformanceTracker;
 import io.homo.superresolution.core.graphics.impl.framebuffer.FrameBufferAttachmentType;
 import io.homo.superresolution.core.graphics.impl.texture.ITexture;
-import io.homo.superresolution.thirdparty.fsr2.common.Fsr2Utils;
 import org.joml.Vector2f;
 import io.homo.superresolution.core.graphics.opengl.framebuffer.GlFrameBuffer;
 import net.minecraft.client.Camera;
@@ -68,10 +67,7 @@ public class AlgorithmManager {
         if (!supportsJitter(type)) {
             return 0;
         }
-        return Fsr2Utils.ffxFsr2GetJitterPhaseCount(
-                RenderHandlerManager.getRenderWidth(),
-                RenderHandlerManager.getScreenWidth()
-        );
+        return 16;
     }
 
     public static float extractVerticalFovDegrees(Matrix4f projectionMatrix) {
@@ -143,28 +139,35 @@ public class AlgorithmManager {
 
     public static Vector2f getPreviousJitterOffset() {
         if (supportsJitter(SuperResolution.algorithmDescription)) {
-            return Fsr2Utils.ffxFsr2GetJitterOffset(
-                    RenderHandlerManager.getFrameCount() - 1,
-                    Fsr2Utils.ffxFsr2GetJitterPhaseCount(
-                            RenderHandlerManager.getRenderWidth(),
-                            RenderHandlerManager.getScreenWidth()
-                    )
-            );
+            return haltonJitter(RenderHandlerManager.getFrameCount() - 1);
         }
         return new Vector2f(0);
     }
 
     public static Vector2f getJitterOffset() {
         if (supportsJitter(SuperResolution.algorithmDescription)) {
-            return Fsr2Utils.ffxFsr2GetJitterOffset(
-                    RenderHandlerManager.getFrameCount(),
-                    Fsr2Utils.ffxFsr2GetJitterPhaseCount(
-                            RenderHandlerManager.getRenderWidth(),
-                            RenderHandlerManager.getScreenWidth()
-                    )
-            );
+            return haltonJitter(RenderHandlerManager.getFrameCount());
         }
         return new Vector2f(0);
+    }
+
+    private static Vector2f haltonJitter(int index) {
+        int sequenceLength = getConfiguredJitterSequenceLength();
+        if (sequenceLength <= 0) return new Vector2f(0);
+        int idx = Math.floorMod(index, sequenceLength) + 1;
+        return new Vector2f(halton(idx, 2) - 0.5f, halton(idx, 3) - 0.5f);
+    }
+
+    private static float halton(int index, int base) {
+        float result = 0;
+        float f = 1.0f / base;
+        int i = index;
+        while (i > 0) {
+            result += f * (i % base);
+            i /= base;
+            f /= base;
+        }
+        return result;
     }
 
     public static int getJitterSequenceLength() {

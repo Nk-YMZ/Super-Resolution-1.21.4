@@ -36,16 +36,12 @@ import io.homo.superresolution.common.minecraft.handler.RenderHandlerManager;
 import io.homo.superresolution.common.perf.PerformanceTracker;
 import io.homo.superresolution.common.upscale.AlgorithmDescriptions;
 import io.homo.superresolution.common.upscale.AlgorithmManager;
-import io.homo.superresolution.common.upscale.fsr2.FSR2;
 import io.homo.superresolution.common.workmode.SRWorkModeManager;
 import io.homo.superresolution.common.workmode.SRWorkModeProvider;
 import io.homo.superresolution.common.workmode.SRWorkModeState;
 import io.homo.superresolution.core.graphics.impl.framebuffer.FrameBufferAttachmentType;
 import io.homo.superresolution.core.graphics.impl.texture.ITexture;
 import io.homo.superresolution.core.graphics.opengl.buffer.GlBuffer;
-import io.homo.superresolution.thirdparty.fsr2.common.Fsr2Context;
-import io.homo.superresolution.thirdparty.fsr2.common.Fsr2PipelineResourceType;
-import io.homo.superresolution.thirdparty.fsr2.common.Fsr2PipelineResources;
 import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
@@ -273,37 +269,7 @@ public class ImGuiLayer {
         ImGui.text("Configured Algorithm: " + SuperResolutionConfig.getUpscaleAlgorithm().getDisplayName());
         ImGui.text("Supports Jitter: " + AlgorithmManager.supportsJitter(SuperResolution.algorithmDescription));
         ImGui.text("Jitter Sequence Length: " + AlgorithmManager.getJitterSequenceLength());
-
-        if (SuperResolution.getCurrentAlgorithm() instanceof FSR2 fsr2 && fsr2.fsr2Context != null) {
-            drawFsr2Resources(fsr2.fsr2Context);
-        } else {
-            ImGui.text("FSR2 context unavailable.");
-        }
         ImGui.end();
-    }
-
-    private void drawFsr2Resources(Fsr2Context context) {
-        for (Map.Entry<Fsr2PipelineResourceType, Fsr2PipelineResources.Fsr2ResourceEntry> entry : context.resources.resources().entrySet()) {
-            Object resource = entry.getValue().getResource();
-            if (!(resource instanceof ITexture texture) || resource instanceof GlBuffer) {
-                continue;
-            }
-            String resourceKey = getFsr2ResourceKey(entry.getKey());
-            ImGui.text(resourceKey + ": " + entry.getValue().getDescription().label);
-            ImGui.sameLine();
-            if (ImGui.smallButton("Open##fsr2-" + resourceKey)) {
-                openViewer(new DebugTextureEntry(
-                        "fsr2:" + resourceKey,
-                        entry.getValue().getDescription().label,
-                        texture.handle(),
-                        texture.getWidth(),
-                        texture.getHeight(),
-                        "fsr2",
-                        resourceKey,
-                        true
-                ));
-            }
-        }
     }
 
     private void collectBaseTextures() {
@@ -353,21 +319,9 @@ public class ImGuiLayer {
     }
 
     private void collectAlgorithmTextures() {
-        if (SuperResolutionConfig.getUpscaleAlgorithm() != AlgorithmDescriptions.FSR2
-                || !(SuperResolution.getCurrentAlgorithm() instanceof FSR2 fsr2)
-                || fsr2.fsr2Context == null) {
-            return;
-        }
-        ImGuiDebugContext ctx = new ImGuiDebugContext("fsr2", textures::add, this::openViewer);
-        for (Map.Entry<Fsr2PipelineResourceType, Fsr2PipelineResources.Fsr2ResourceEntry> entry : fsr2.fsr2Context.resources.resources().entrySet()) {
-            Object resource = entry.getValue().getResource();
-            if (!(resource instanceof ITexture texture) || resource instanceof GlBuffer) {
-                continue;
-            }
-            String resourceKey = getFsr2ResourceKey(entry.getKey());
-            ctx.addTexture(resourceKey, entry.getValue().getDescription().label, texture, resourceKey, true);
-        }
+        // Only DLSS is supported; no per-algorithm debug textures to collect.
     }
+
 
     private void drawCaptureButtons() {
         if (ImGui.button("Capture")) {
@@ -630,11 +584,7 @@ public class ImGuiLayer {
     }
 
     private static float clamp(float value, float min, float max) {
-        return Math.max(min, Math.min(max, value));
-    }
-
-    private static String getFsr2ResourceKey(Fsr2PipelineResourceType resourceType) {
-        return "resource-" + resourceType.id();
+        return Math.max(min, Math.min(value, max));
     }
 
     private String getAlgorithmName() {
