@@ -52,6 +52,14 @@ DLSS 运行时会在首次启动时自动解压到 `config/super_resolution/libr
 * Iris 正常工作
 * Reese's Sodium Options 正常工作
 
+### 已知不兼容
+
+| 模组 | 版本 |
+| --- | --- |
+| GPU Tape | 1.0.5.1 |
+| RenderScale | 1.1 |
+| Axiom | 5.4.2 |
+
 ## 构建
 
 需要 JDK 25、Vulkan SDK、CMake + Ninja、Clang。
