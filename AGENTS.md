@@ -55,10 +55,10 @@ Minecraft 模组（Fabric），内置 NVIDIA DLSS 超分辨率算法以提升游
 
 ## 当前状态与注意事项
 
-- 已完成 `dev` 分支的 Windows-only 移植，并推送到 `origin/dev`（`c5de4b74`）。`main` 仍为 Linux-only，未改动。
-- Java 层已通过 `./gradlew :common:compileJava` 编译验证。
-- **尚未运行原生库编译**（Windows 本机 MSVC 或 Linux Docker 交叉编译），因此 `common/src/main/resources/lib/` 里还没有实际的 DLL 文件。
-- **尚未在 Windows 客户端运行测试**。DLSS 功能正确性需要实际构建并运行游戏验证。
+- 已完成 `dev` 分支的 Windows-only 移植，并推送到 `origin/dev`。
+- Java 层已通过 `./gradlew :common:compileJava` 编译验证，完整 Fabric jar 已通过 `./gradlew -Pminecraft_version_config=1.21.4 :fabric:build` 构建。
+- **Windows 原生库已在本机 Linux 环境下通过 Docker + msvc-wine 交叉编译完成**，`common/src/main/resources/lib/` 内已包含 `libSuperResolution+win64+*.dll`、`libSuperResolutionDLSS+win64+*.dll` 与 `nvngx_dlss.dll`。
+- **Windows 客户端实机测试已通过**：DLSS context 创建、tensor 分配、dispatch 全链路正常，开关超分可见明显帧率变化，单人/多人模式均工作。
 - 换设备继续开发时，需要重新执行：
   ```bash
   git submodule update --init --recursive

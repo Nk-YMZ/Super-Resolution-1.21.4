@@ -52,6 +52,10 @@ DLSS 运行时会在首次启动时自动解压到 `config/super_resolution/libr
 * Iris 正常工作
 * Reese's Sodium Options 正常工作
 
+## 验证
+
+Windows 客户端已实机测试通过：DLSS context 创建、tensor 分配、dispatch 全链路正常，开关超分可见明显帧率变化，单人/多人模式均工作。
+
 ## 构建
 
 ### Windows 本机构建
