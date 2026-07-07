@@ -21,7 +21,7 @@
 
 ### 系统
 
-* **Linux x86_64**（不支持 Windows / macOS，本仓库不为其它平台增加额外工作）
+* **Linux x86_64**（Windows 版本见 [`dev`](https://github.com/Nk-YMZ/Super-Resolution-1.21.4/tree/dev) 分支与 [Releases](https://github.com/Nk-YMZ/Super-Resolution-1.21.4/releases)）
 
 ### Minecraft
 
