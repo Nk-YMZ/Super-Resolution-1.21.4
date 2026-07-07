@@ -18,13 +18,13 @@ tasks.named("clean") {
 
 tasks.register<Copy>("copyNativeLib") {
     from("$projectDir/cpp/output/lib") {
-        include("libSuperResolution+*+*.so")
+        include("libSuperResolution+*+*.dll")
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
     into("$projectDir/../common/src/main/resources/lib/")
 
     from("$projectDir/cpp/output/bin") {
-        include("libSuperResolution+*+*.so")
+        include("libSuperResolution+*+*.dll")
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
     into("$projectDir/../common/src/main/resources/lib/")
@@ -32,37 +32,41 @@ tasks.register<Copy>("copyNativeLib") {
 
 tasks.register<Copy>("copyNativeLibAll") {
     from("$projectDir/cpp/output/lib") {
-        include("libSuperResolution*+*+*.so")
+        include("libSuperResolution*+*+*.dll")
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
     into("$projectDir/../common/src/main/resources/lib/")
 
     from("$projectDir/cpp/output/bin") {
-        include("libSuperResolution*+*+*.so")
+        include("libSuperResolution*+*+*.dll")
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
     into("$projectDir/../common/src/main/resources/lib/")
 
-    // NVIDIA NGX DLSS 运行时 snippet（来自 DLSS submodule lib/Linux_x86_64/rel）
+    // NVIDIA NGX DLSS 运行时 redistributable（来自 DLSS submodule lib/Windows_x86_64/rel）
     // 由 DLSS.java 设置的 NGX_FEATURE_DLL_PATH 在 NATIVE_LIBRARIES_DIR 中按文件名查找
-    from("$projectDir/cpp/SRNativeDLSS/third_party/DLSS/lib/Linux_x86_64/rel") {
-        include("libnvidia-ngx-dlss.so.310.7.0")
+    from("$projectDir/cpp/SRNativeDLSS/third_party/DLSS/lib/Windows_x86_64/rel") {
+        include("nvngx_dlss.dll")
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
     into("$projectDir/../common/src/main/resources/lib/")
 }
 
-tasks.register<Exec>("buildNativeCppLinux") {
+tasks.register<Exec>("buildNativeCppWindows") {
     group = "build"
-    description = "Build native C/C++ .so Libraries for Linux"
+    description = "Build native C/C++ .dll Libraries for Windows"
     workingDir = file("$projectDir/cpp")
-    commandLine("bash", "build_linux.sh")
+    if (org.gradle.internal.os.OperatingSystem.current().isWindows) {
+        commandLine("powershell", "-ExecutionPolicy", "Bypass", "-File", "build_windows.ps1")
+    } else {
+        commandLine("bash", "build_windows_docker.sh")
+    }
 }
 
 tasks.register("buildNativeCpp") {
     group = "build"
-    description = "Build native C/C++ libraries for Linux"
-    dependsOn("buildNativeCppLinux")
+    description = "Build native C/C++ libraries for Windows"
+    dependsOn("buildNativeCppWindows")
 }
 
 tasks.named("copyNativeLibAll") {

@@ -1,18 +1,18 @@
 <div align="center">
 <h1>Super Resolution — DLSS for Minecraft 1.21.4</h1>
-<p>Linux x86_64 · Fabric + Iris · 开箱即用</p>
+<p>Windows x86_64 · Fabric + Iris · 开箱即用</p>
 </div>
 
 ----
 
 在 Minecraft 中内置 NVIDIA DLSS 超分辨率算法，以提升游戏性能与画质。
 
-本仓库是 [187J3X1-114514/superresolution](https://github.com/187J3X1-114514/superresolution) 的特化分支，针对 **Linux x86_64 + Minecraft 1.21.4 + Fabric + Iris** 这一特定场景做了定制与优化，仅保留 DLSS 算法路径。
+本仓库是 [187J3X1-114514/superresolution](https://github.com/187J3X1-114514/superresolution) 的特化分支，针对 **Windows x86_64 + Minecraft 1.21.4 + Fabric + Iris** 这一特定场景做了定制与优化，仅保留 DLSS 算法路径。
 
 ## 特化内容
 
-- **内置 NVIDIA NGX DLSS 运行时**：将 `libnvidia-ngx-dlss.so.310.7.0` 打包进 jar，开箱即用，无需手动下载放置动态库
-- **DLSS SDK 固定 v310.7.0**：规避 v310.6.0 在 Linux 上的 NGX snippet 签名验证 bug
+- **内置 NVIDIA NGX DLSS 运行时**：将 `nvngx_dlss.dll` 打包进 jar，开箱即用，无需手动下载放置动态库
+- **DLSS SDK 固定 v310.7.0**：与 Linux 版保持一致，规避 v310.6.0 的 NGX snippet 签名验证 bug
 - **默认启用 Vulkan 初始化**：DLSS 依赖 Vulkan 互操作路径，不再被跳过
 - **默认暗色主题**
 - 移除了跨平台/多版本分支，专注于单一目标以减少维护负担
@@ -21,7 +21,7 @@
 
 ### 系统
 
-* **Linux x86_64**（不支持 Windows / macOS，本仓库不为其它平台增加额外工作）
+* **Windows x86_64**（本 dev 分支为 Windows-only 移植，不提供 Linux 支持）
 
 ### Minecraft
 
@@ -54,15 +54,25 @@ DLSS 运行时会在首次启动时自动解压到 `config/super_resolution/libr
 
 ## 构建
 
-需要 JDK 25、Vulkan SDK、CMake + Ninja、Clang。
+### Windows 本机构建
 
-```bash
+需要 Windows 主机、JDK 25、Vulkan SDK、MSVC、CMake。
+
+```powershell
 git clone --recurse-submodules https://github.com/Nk-YMZ/Super-Resolution-1.21.4.git
 cd Super-Resolution-1.21.4
 pip install pyyaml simplejson
-cd native/cpp && python init.py && cd ../..
-./gradlew :native:buildNative
-./gradlew -Pminecraft_version_config=1.21.4 :fabric:build
+cd native/cpp && python init.py && cd ..\..
+.\gradlew :native:buildNative
+.\gradlew -Pminecraft_version_config=1.21.4 :fabric:build
+```
+
+### Linux 交叉编译 Windows DLL
+
+在 Linux 上通过 Docker + msvc-wine 交叉编译：
+
+```bash
+./gradlew :native:buildNativeCppWindows
 ```
 
 产物在 `fabric/build/libs/`。

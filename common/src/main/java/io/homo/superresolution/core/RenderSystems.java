@@ -18,8 +18,6 @@
 
 package io.homo.superresolution.core;
 
-import io.homo.superresolution.api.platform.OperatingSystemType;
-import io.homo.superresolution.api.platform.Platform;
 import io.homo.superresolution.common.SuperResolution;
 import io.homo.superresolution.common.config.SuperResolutionConfig;
 import io.homo.superresolution.common.minecraft.B3DVulkanBridge;
@@ -27,8 +25,8 @@ import io.homo.superresolution.core.graphics.opengl.GlRenderSystem;
 import io.homo.superresolution.core.graphics.system.IRenderSystem;
 import io.homo.superresolution.core.graphics.vulkan.VkRenderSystem;
 import io.homo.superresolution.core.graphics.vulkan.VulkanException;
-import org.lwjgl.vulkan.KHRExternalMemoryFd;
-import org.lwjgl.vulkan.KHRExternalSemaphoreFd;
+import org.lwjgl.vulkan.KHRExternalMemoryWin32;
+import org.lwjgl.vulkan.KHRExternalSemaphoreWin32;
 import org.lwjgl.vulkan.VK;
 
 import static org.lwjgl.vulkan.EXTDebugUtils.VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
@@ -130,10 +128,8 @@ public class RenderSystems {
                 .addDeviceExtension("VK_NVX_image_view_handle")
                 .addDeviceExtension(VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME)
                 .addDeviceExtension(VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME);
-        if (Platform.currentPlatform.getOS().type == OperatingSystemType.LINUX) {
-            vulkan.addDeviceExtension(KHRExternalMemoryFd.VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME)
-                    .addDeviceExtension(KHRExternalSemaphoreFd.VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME);
-        }
+        vulkan.addDeviceExtension(KHRExternalMemoryWin32.VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME)
+                .addDeviceExtension(KHRExternalSemaphoreWin32.VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME);
         try {
             vulkan.initRenderSystem();
             return;

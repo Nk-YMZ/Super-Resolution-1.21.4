@@ -70,7 +70,7 @@ public class AlgorithmDescriptions {
             .displayName("NVIDIA DLSS")
             .requirement(
                     Requirement.nothing()
-                            .addSupportedOS(new OperatingSystem(SystemArchitecture.X86_64, OperatingSystemType.LINUX))
+                            .addSupportedOS(new OperatingSystem(SystemArchitecture.X86_64, OperatingSystemType.WINDOWS))
                             .requiredGlExtension("GL_EXT_memory_object")
                             .requiredGlExtension("GL_EXT_semaphore")
                             .glMajorVersion(4)

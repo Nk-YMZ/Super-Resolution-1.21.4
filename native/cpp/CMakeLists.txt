@@ -26,8 +26,9 @@ if(NOT DEFINED SRLIB_VERSION)
     set(SRLIB_VERSION ${COMPILE_TIME})
 endif()
 
-set(LIB_PLATFORM "linux64")
-set(ON_LINUX ON)
+set(LIB_PLATFORM "win64")
+set(ON_WINDOWS ON)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 foreach(OUTPUTCONFIG DEBUG RELEASE RELWITHDEBINFO MINSIZEREL)
     string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG_UPPER)
@@ -35,14 +36,6 @@ foreach(OUTPUTCONFIG DEBUG RELEASE RELWITHDEBINFO MINSIZEREL)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${PROJECT_SOURCE_DIR}/output/lib")
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UPPER} "${PROJECT_SOURCE_DIR}/output/lib")
 endforeach()
-
-add_compile_options(-Wall)
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_compile_options(-O3 -g1)
-elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-    add_compile_options(-O3 -g0 -ffunction-sections -fdata-sections -flto)
-    add_link_options(-fuse-ld=lld -flto -Wl,--gc-sections -s)
-endif()
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/third_party

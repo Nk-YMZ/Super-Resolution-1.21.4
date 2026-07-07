@@ -11,8 +11,8 @@ include_directories(
     ${GLSLANG_DIR}
 )
 
-add_definitions(-DON_LINUX64 -DFFX_GCC)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+add_definitions(-DON_WIN64 -D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 #add freetype
 add_subdirectory("${FT_DIR}")
@@ -34,11 +34,10 @@ aux_source_directory(${PROJECT_SOURCE_DIR}/src ALL_SRC)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/nvg NVG_SRC)
 add_library(SR_MAIN_LIB SHARED ${ALL_SRC} ${NVG_SRC})
 target_compile_definitions(SR_MAIN_LIB PRIVATE SRLIB_VERSION="${SRLIB_VERSION}")
-set_target_properties(SR_MAIN_LIB PROPERTIES OUTPUT_NAME "SuperResolution+${LIB_PLATFORM}+${SR_BUILD_TYPE}")
+set_target_properties(SR_MAIN_LIB PROPERTIES OUTPUT_NAME "libSuperResolution+${LIB_PLATFORM}+${SR_BUILD_TYPE}")
 target_link_libraries(SR_MAIN_LIB
     glslang
     glslang-default-resource-limits
     SPIRV
     freetype
 )
-target_link_libraries(SR_MAIN_LIB -lstdc++fs -pthread -ldl)
