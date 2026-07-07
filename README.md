@@ -17,3 +17,35 @@
 ## 下载
 
 从 [Releases](https://github.com/Nk-YMZ/Super-Resolution-1.21.4/releases) 下载 Windows 版 jar，放入 `mods/` 目录即可。
+
+## 构建
+
+### Windows 本机构建
+
+需要 Windows 主机、JDK 25、Vulkan SDK、MSVC、CMake。
+
+```powershell
+git clone --recurse-submodules https://github.com/Nk-YMZ/Super-Resolution-1.21.4.git
+cd Super-Resolution-1.21.4
+pip install pyyaml simplejson
+cd native/cpp && python init.py && cd ..\..
+.\gradlew :native:buildNative
+.\gradlew -Pminecraft_version_config=1.21.4 :fabric:build
+```
+
+### Linux 交叉编译 Windows DLL
+
+在 Linux 上通过 Docker + msvc-wine 交叉编译（镜像 `ghcr.io/shiroiame-kusu/msvc-wine-debian12:0.0.1`）：
+
+```bash
+git clone --recurse-submodules https://github.com/Nk-YMZ/Super-Resolution-1.21.4.git
+cd Super-Resolution-1.21.4
+pip install pyyaml simplejson
+cd native/cpp && python init.py && cd ../..
+./gradlew :native:buildNativeCppWindows
+./gradlew :native:copyNativeLibAll
+./gradlew -Pminecraft_version_config=1.21.4 :fabric:build
+```
+
+产物在 `fabric/build/libs/`。
+
