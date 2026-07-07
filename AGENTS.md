@@ -44,12 +44,28 @@ Minecraft 模组（Fabric），内置 NVIDIA DLSS 超分辨率算法以提升游
 - **NVIDIA NGX DLSS 运行时** `nvngx_dlss.dll`（来自 `native/cpp/SRNativeDLSS/third_party/DLSS/lib/Windows_x86_64/rel/`）由 `copyNativeLibAll` 任务拷贝进 `common/src/main/resources/lib/`，并经 `NativeLibManager.LIB_NVIDIA_NGX_DLSS` 在启动时解压到 `NATIVE_LIBRARIES_DIR`，与 `DLSS.java` 设置的 `NGX_FEATURE_DLL_PATH` 同目录，使 jar 开箱即用。
 - `NativeLibManager.NativeLib` 的 `nameIsPath=true` 模式下 `baseName` 视为完整文件名直接使用，不再自动追加 `.dll` 后缀（用于 NGX 运行时这种现成的文件名）。
 - 不打包 DLSSD / DLSSG 相关运行时 —— 本 mod 不使用，避免膨胀 jar。
+- 仅编译 DLSS 模块：CMake 中 `SR_DLSS=ON`，不构建 FSR / XeSS 相关原生库。
 
 ## OpenGL-Vulkan 互操作
 
 - DLSS 在 Vulkan 端运行，渲染在 OpenGL 端，因此需要跨 API 共享纹理和信号量。
 - 本分支仅实现 **Windows 路径**：Vulkan 使用 `VK_KHR_external_memory_win32` / `VK_KHR_external_semaphore_win32` 导出 NT 句柄，OpenGL 使用 `GL_EXT_memory_object_win32` / `GL_EXT_semaphore_win32` 导入。
 - 对应代码集中在 `common/src/main/java/io/homo/superresolution/core/graphics/vulkan/VulkanInterop.java` 和 `RenderSystems.java`，已移除 Linux 的 file-descriptor 路径。
+- `AlgorithmDescriptions` 中 DLSS 仅声明需求 `GL_EXT_memory_object` / `GL_EXT_semaphore`（与上游一致），Windows 驱动通常同时提供对应的 win32 扩展。
+
+## 当前状态与注意事项
+
+- 已完成 `dev` 分支的 Windows-only 移植，并推送到 `origin/dev`（`c5de4b74`）。`main` 仍为 Linux-only，未改动。
+- Java 层已通过 `./gradlew :common:compileJava` 编译验证。
+- **尚未运行原生库编译**（Windows 本机 MSVC 或 Linux Docker 交叉编译），因此 `common/src/main/resources/lib/` 里还没有实际的 DLL 文件。
+- **尚未在 Windows 客户端运行测试**。DLSS 功能正确性需要实际构建并运行游戏验证。
+- 换设备继续开发时，需要重新执行：
+  ```bash
+  git submodule update --init --recursive
+  pip install pyyaml simplejson
+  cd native/cpp && python init.py
+  ```
+  然后按“构建基础”或“Linux 交叉编译 Windows DLL”章节构建。
 
 ## Linux 交叉编译 Windows DLL（镜像已预拉）
 
